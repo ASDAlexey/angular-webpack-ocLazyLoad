@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!--<meta name="viewport" content="{{metaContent}}">-->
+	<meta name="description" content="description">
+	<!--<title ng-bind="page.notReadMsg + ' ' + (page.title || config.title)"></title>-->
+	<base href="/">
+	<!--<link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">-->
+</head>
+<body>
+<div ng-controller="Welcome as vm">
+	{{vm.a}}
+	{{b}}
+</div>
+<ui-view></ui-view>
+<script defer src="/vendorsApp.js"></script>
+<script defer src="/app.js"></script>
+</body>
+</html>
