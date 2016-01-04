@@ -1,7 +1,8 @@
 // Features components
-import welcome from '../welcome/index.js';
+import '../welcome/index.ts';
 
-let module=angular.module('app.core',[
+angular.module('app.core', [
+    'ui.router',
     // Angular components
     // Shared components
     //'router',
@@ -12,8 +13,8 @@ let module=angular.module('app.core',[
     // 3rd Party components
     //'ui.router'
 ]).run(startApp);
-function startApp(){
-    console.log('start777');
+function startApp() {
+    console.log('start777555777');
     //let configRoute={
     //    url:'',
     //    abstract:true,
@@ -25,4 +26,3 @@ function startApp(){
     //router.setRoute('app',configRoute,configPage);
     //router.configureRoutes();
 }
-export default module;

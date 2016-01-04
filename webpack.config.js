@@ -3,15 +3,17 @@ var _=require('lodash');
 var ExtractTextPlugin=require("extract-text-webpack-plugin"),
     path=require("path"),
     webpack=require('webpack'),
-    HtmlPlugin=require('html-webpack-plugin');
+    HtmlPlugin=require('html-webpack-plugin'),
+    ngAnnotatePlugin=require('ng-annotate-webpack-plugin'),
+    rimraf=require('rimraf');
 var config=require('./config.json');
 var NODE_ENV=process.env.NODE_ENV||'development';
+//var NODE_ENV='production';
 var addPath=function(str){
     return '../'+str;
 };
 var addHash=function(template,hash){
-    return NODE_ENV=='production'?
-        template.replace(/\.[^.]+$/,`.[${hash}]$&`):`${template}?hash=[${hash}]`;
+    return NODE_ENV=='production'?template.replace(/\.[^.]+$/,`.[${hash}]$&`):`${template}?hash=[${hash}]`;
 };
 module.exports={
     context:path.join(__dirname,'app'),
@@ -19,7 +21,7 @@ module.exports={
         app:[ // --inline --hot
             'webpack-dev-server/client?http://localhost:8080',
             'webpack/hot/dev-server',
-            './index.js',
+            './index.ts',
             './index.html'
         ],
         vendorsApp:_.map(_.values(config.app.vendors),addPath)
@@ -37,9 +39,12 @@ module.exports={
     },
     watch:NODE_ENV=='development',// webpack пересобирает с учетом кеша только те файлы которые изменились
     watchOptions:{
-        aggregateTimeout:100
+        aggregateTimeout:300,
+        poll:1000
     },
-    devtool:NODE_ENV=='development'?'cheap-inline-module-sourse-map':null,
+    historyApiFallback:true,
+    //devtool:NODE_ENV=='production'?null:'cheap-inline-module-sourse-map',
+    devtool:'source-map',
     resolve:{
         extensions:['','.ts','.js','.styl','.jade','.ts']
     },
@@ -47,23 +52,29 @@ module.exports={
         loaders:[{
             test:/\.ts(x?)$/,
             exclude:/(node_modules|bower_components)/,
-            loader:'babel-loader!ts-loader'
+            loader:'ng-annotate!nginject!babel?optional=runtime&stage=1!ts-loader'
         },{
             test:/\.js$/,
             exclude:/(node_modules|bower_components)/,
-            loader:'babel?optional=runtime'//?optional=runtime - уменьшение размера кода после babel
+            loader:'ng-annotate!babel?optional=runtime?stage=1'//?optional=runtime - уменьшение размера кода после babel
         },{
             test:/\.jade$/,
             exclude:/(node_modules|bower_components)/,
             loader:"jade"
         },{
+            test:/\.css$/,
+            exclude:/(node_modules|bower_components)/,
+            loader:'style!css-loader?sourceMap!autoprefixer-loader?browsers=last 5 version'
+            //loader:'style!css-loader?sourceMap!autoprefixer-loader?browsers=last 5 version!stylus?resolve url'
+        },{
             test:/\.styl$/,
             exclude:/(node_modules|bower_components)/,
-            loader:'style!css!stylus?resolve urls'
+            loader:'style!css-loader?sourceMap!autoprefixer-loader?browsers=last 5 version!stylus?resolve url'
+            //loader:'style!css-loader?sourceMap!autoprefixer-loader?browsers=last 5 version!stylus?resolve url'
         },{
             test:/\.(png|jpg|svg|ttf|eot|woff|woff2)$/,
             exclude:/(node_modules|bower_components)/,
-            loader:'file?name=[path][name].[ext]'
+            loader:'file?name=[path][name].[ext]?[hash]'
         },{
             test:/\.json$/,loader:'json',
             exclude:/(node_modules|bower_components)/
@@ -77,11 +88,17 @@ module.exports={
         ]
     },
     plugins:[
+        {
+            apply:(compiler) =>{
+                rimraf.sync(compiler.options.output.path);
+            }
+        },
         new webpack.NoErrorsPlugin(),//не создавать файлы если есть ошибки сборки
-        new ExtractTextPlugin('[name].css',{allChunks:true,disable:true}),
+        new ExtractTextPlugin('[name].css',{allChunks:true,disable:process.env.NODE_ENV=='development'}),
         new webpack.HotModuleReplacementPlugin({
             hot:true
         }),
+        //new ngAnnotatePlugin({add:true}),
         // Этот файл будет являться "корневым" index.html
         new HtmlPlugin({
             title:'Test APP',

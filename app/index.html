@@ -8,12 +8,9 @@
 	<!--<title ng-bind="page.notReadMsg + ' ' + (page.title || config.title)"></title>-->
 	<base href="/">
 	<!--<link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">-->
+	<link href="/app.css" rel="stylesheet">
 </head>
 <body>
-<div ng-controller="Welcome as vm">
-	{{vm.a}}
-	{{b}}
-</div>
 <ui-view></ui-view>
 <script defer src="/vendorsApp.js"></script>
 <script defer src="/app.js"></script>

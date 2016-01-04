@@ -9,7 +9,9 @@
   "description": "https://jellychip.com",
   "main": "app/app.js",
   "scripts": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "autoprefixer-loader": "^3.1.0"
+  },
   "dependencies": {
     "babel-core": "^5.x",
     "babel-loader": "^5.x",
@@ -20,13 +22,18 @@
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.7",
     "html-webpack-plugin": "^1.7.0",
+    "jade": "^1.11.0",
     "jade-loader": "^0.8.0",
     "lodash": "^3.10.1",
+    "ng-annotate-loader": "0.0.10",
+    "ng-annotate-webpack-plugin": "^0.1.2",
     "path": "^0.12.7",
+    "rimraf": "^2.5.0",
     "style-loader": "^0.13.0",
     "stylus-loader": "^1.4.2",
     "ts-loader": "^0.7.2",
     "typescript": "^1.7.5",
+    "url-loader": "^0.5.7",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   }
