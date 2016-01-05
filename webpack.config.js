@@ -24,7 +24,10 @@ module.exports={
             './index.ts',
             './index.html'
         ],
-        vendorsApp:_.map(_.values(config.app.vendors),addPath)
+        vendorsApp:_.map(_.values(config.app.vendors),addPath),
+        //styles:[
+        //    "./assets/styles/application.styl"
+        //]
     },
     /* output:{
      path:__dirname+'/dist',
@@ -34,7 +37,8 @@ module.exports={
      library:'[name]'
      },*/
     output:{
-        path:__dirname+'/dist',
+        path:path.join(__dirname,'/dist/'),
+        publicPath:'/',
         filename:'[name].js'
     },
     watch:NODE_ENV=='development',// webpack пересобирает с учетом кеша только те файлы которые изменились
@@ -52,11 +56,11 @@ module.exports={
         loaders:[{
             test:/\.ts(x?)$/,
             exclude:/(node_modules|bower_components)/,
-            loader:'ng-annotate!nginject!babel?optional=runtime&stage=1!ts-loader'
+            loader:'ng-annotate!nginject!babel?optional=runtime!ts-loader'
         },{
             test:/\.js$/,
             exclude:/(node_modules|bower_components)/,
-            loader:'ng-annotate!babel?optional=runtime?stage=1'//?optional=runtime - уменьшение размера кода после babel
+            loader:'ng-annotate!babel?optional=runtime'//?optional=runtime - уменьшение размера кода после babel
         },{
             test:/\.jade$/,
             exclude:/(node_modules|bower_components)/,
@@ -88,38 +92,52 @@ module.exports={
         ]
     },
     plugins:[
-        {
-            apply:(compiler) =>{
-                rimraf.sync(compiler.options.output.path);
-            }
-        },
-        new webpack.NoErrorsPlugin(),//не создавать файлы если есть ошибки сборки
-        new ExtractTextPlugin('[name].css',{allChunks:true,disable:process.env.NODE_ENV=='development'}),
-        new webpack.HotModuleReplacementPlugin({
-            hot:true
-        }),
+        //{
+        //    apply:(compiler) =>{
+        //        rimraf.sync(compiler.options.output.path);
+        //    }
+        //},
+        //new webpack.NoErrorsPlugin(),//не создавать файлы если есть ошибки сборки
+        //new ExtractTextPlugin('[name].css',{allChunks:true,disable:process.env.NODE_ENV=='development'}),
+        new webpack.HotModuleReplacementPlugin()
         //new ngAnnotatePlugin({add:true}),
         // Этот файл будет являться "корневым" index.html
-        new HtmlPlugin({
+       /* new HtmlPlugin({
             title:'Test APP',
             chunks:['app'],
             filename:'index.html',
             template:path.join(__dirname,'app','index.html')
-        })
+        })*/
         /*new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
          new webpack.ProvidePlugin({
          pluck: "lodash/collection/pluck"//переменная:путь до модуля
          })*/
-    ]
+    ],
+    stats:{
+        colors:true
+    },
+    devServer:{
+        host:'localhost',
+        port:8080,
+        contentBase:path.join(__dirname,"dist"),
+        hot:true
+        //historyApiFallback:true
+        //contentBase: path.join(__dirname, "frontend"),
+        //proxy: [{
+        //    path: /.*/,
+        //    target: 'http://localhost:3000'
+        //    //host: 'proxy.host'
+        //}],
+    }
 };
-if(NODE_ENV=='production'){
-    module.exports.plugins.push(
-        new webpack.optimize.UglifyJsPlugin({
-            compress:{
-                warnings:false,
-                drop_console:true,
-                unsafe:true
-            }
-        })
-    )
-}
+//if(NODE_ENV=='production'){
+//    module.exports.plugins.push(
+//        new webpack.optimize.UglifyJsPlugin({
+//            compress:{
+//                warnings:false,
+//                drop_console:true,
+//                unsafe:true
+//            }
+//        })
+//    )
+//}
