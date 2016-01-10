@@ -5,7 +5,10 @@ var ExtractTextPlugin=require("extract-text-webpack-plugin"),
     webpack=require('webpack'),
     HtmlPlugin=require('html-webpack-plugin'),
     ngAnnotatePlugin=require('ng-annotate-webpack-plugin'),
-    rimraf=require('rimraf');
+    rimraf=require('rimraf'),
+    browserSync=require('browser-sync'),
+    BrowserSyncPlugin=require('browser-sync-webpack-plugin'),
+    modRewrite=require('connect-modrewrite');
 var config=require('./config.json');
 var NODE_ENV=process.env.NODE_ENV||'development';
 //var NODE_ENV='production';
@@ -19,12 +22,12 @@ module.exports={
     context:path.join(__dirname,'app'),
     entry:{
         app:[ // --inline --hot
-            'webpack-dev-server/client?http://localhost:8080',
+            'webpack-dev-server/client?https://localhost:8080',
             'webpack/hot/dev-server',
             './index.ts',
             './index.html'
         ],
-        vendorsApp:_.map(_.values(config.app.vendors),addPath),
+        vendorsApp:_.map(_.values(config.app.vendors),addPath)
         //styles:[
         //    "./assets/styles/application.styl"
         //]
@@ -99,15 +102,45 @@ module.exports={
         //},
         //new webpack.NoErrorsPlugin(),//не создавать файлы если есть ошибки сборки
         //new ExtractTextPlugin('[name].css',{allChunks:true,disable:process.env.NODE_ENV=='development'}),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        /*new BrowserSyncPlugin(
+         // BrowserSync options
+         {
+         proxy:'https://localhost:8080',
+         /!*server:{
+         //baseDir:path.join(__dirname,"dist"),
+         middleware:[
+         modRewrite([
+         '^/$ /index.html [L]',
+         '^/admin$ /admin/index.html',
+         '^/admin[/\\w+]+$ /admin/index.html [L]',
+         '(^/\\w+\.html\\?.*)$ /$1 [L]',
+         '!\\.\\w+ /app.html [L]'
+         ])
+         ]
+         },*!/
+         /!*https: 'https',
+         port: 8000,
+         host: 'localhost',*!/
+         port: 8000,
+         open:false,
+         notify:false
+         },
+         // plugin options
+         {
+         // prevent BrowserSync from reloading the page
+         // and let Webpack Dev Server take care of this
+         reload:false
+         }
+         )*/
         //new ngAnnotatePlugin({add:true}),
         // Этот файл будет являться "корневым" index.html
-       /* new HtmlPlugin({
+        new HtmlPlugin({
             title:'Test APP',
             chunks:['app'],
             filename:'index.html',
             template:path.join(__dirname,'app','index.html')
-        })*/
+        })
         /*new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
          new webpack.ProvidePlugin({
          pluck: "lodash/collection/pluck"//переменная:путь до модуля
@@ -116,19 +149,19 @@ module.exports={
     stats:{
         colors:true
     },
-    devServer:{
-        host:'localhost',
-        port:8080,
-        contentBase:path.join(__dirname,"dist"),
-        hot:true
-        //historyApiFallback:true
-        //contentBase: path.join(__dirname, "frontend"),
-        //proxy: [{
-        //    path: /.*/,
-        //    target: 'http://localhost:3000'
-        //    //host: 'proxy.host'
-        //}],
-    }
+    /*devServer:{
+     host:'localhost',
+     port:8080,
+     contentBase:path.join(__dirname,"dist"),
+     hot:true,
+     historyApiFallback:true
+     //contentBase: path.join(__dirname, "frontend"),
+     //proxy: [{
+     //    path: /.*!/,
+     //    target: 'http://localhost:3000'
+     //    //host: 'proxy.host'
+     //}],
+     }*/
 };
 //if(NODE_ENV=='production'){
 //    module.exports.plugins.push(

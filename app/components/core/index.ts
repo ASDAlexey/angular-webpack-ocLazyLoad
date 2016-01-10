@@ -14,7 +14,7 @@ angular.module('app.core', [
     //'ui.router'
 ]).run(startApp);
 function startApp() {
-    console.log('start777555777');
+    console.log('start77755577755555');
     //let configRoute={
     //    url:'',
     //    abstract:true,
