@@ -7,13 +7,13 @@ var gutil=require("gulp-util");
 var modRewrite=require('connect-modrewrite');
 
 gulp.task("webpack-dev-server",function(callback){
-    var modRewriteRulesConfig=[
+   /* var modRewriteRulesConfig=[
         '^/$ /index.html [L]',
         '^/admin$ /admin/index.html',
         '^/admin[/\\w+]+$ /admin/index.html [L]',
         '(^/\\w+\.html\\?.*)$ /$1 [L]',
         '!\\.\\w+ /app.html [L]'
-    ];
+    ];*/
 
     var compiler=webpack(Object.create(webpackConfig));
     var server=new WebpackDevServer(compiler,{
@@ -31,11 +31,11 @@ gulp.task("webpack-dev-server",function(callback){
         //quiet: false,
         //noInfo: false,
         //lazy: true,
-        middleware:function(connect,options){
+        /*middleware:function(connect,options){
             var middlewares=[];
             middlewares.push(modRewrite(modRewriteRulesConfig));
             return middlewares;
-        },
+        },*/
         //filename: "bundle.js",
         https:true,
         watch:true,
@@ -49,7 +49,12 @@ gulp.task("webpack-dev-server",function(callback){
 
         // Set this as true if you want to access dev server from arbitrary url.
         // This is handy if you are using a html5 router.
-        historyApiFallback:false
+        historyApiFallback:true,
+        /*historyApiFallback: {
+            rewrites: [
+                {from: /.*\.html/, to: '/index.html'}
+            ]
+        },*/
 
         // Set this if you want webpack-dev-server to delegate a single path to an arbitrary server.
         // Use "*" to proxy all paths to the specified server.
