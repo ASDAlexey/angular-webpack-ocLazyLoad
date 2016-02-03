@@ -31,6 +31,7 @@
     "ng-annotate-webpack-plugin": "^0.1.2",
     "nginject-loader": "^2.1.0",
     "path": "^0.12.7",
+    "raw-loader": "^0.5.1",
     "rimraf": "^2.5.0",
     "style-loader": "^0.13.0",
     "stylus-loader": "^1.4.2",

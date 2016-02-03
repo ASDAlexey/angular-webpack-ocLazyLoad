@@ -1,11 +1,10 @@
 import "./assets/styles/index.styl";
-import "./assets/styles/_html.styl";
 import {config as routesConfig} from "./routes";
-import {Welcome} from "./welcome.directive";
+import {Welcome} from "./popup.directive";
 export default angular
-    .module('app.welcome', [])
-    .directive("welcome", ($timeout) => {
+    .module('app.popup', [])
+    /*.directive("popup", ($timeout) => {
         return new Welcome($timeout);
-    })
+    })*/
     .config(routesConfig)
     .name;

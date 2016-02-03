@@ -1,5 +1,6 @@
 // Features components
-import '../welcome/index.ts';
+import welcome from '../welcome/index.ts';
+import popup from '../popup/index.ts';
 
 angular.module('app.core', [
     'ui.router',
@@ -8,7 +9,8 @@ angular.module('app.core', [
     //'router',
 
     // Features components
-    'app.welcome'
+    welcome,
+    popup
 
     // 3rd Party components
     //'ui.router'

@@ -1,9 +1,9 @@
-import Controller from './welcome.controller';
+import Controller from './popup.controller';
 let Template = require('./assets/templates');
 export function config($stateProvider:angular.ui.IStateProvider, $locationProvider, $urlRouterProvider):void {
     "ngInject";
-    $stateProvider.state('welcome', {
-        url: "/welcome",
+    $stateProvider.state('popup', {
+        url: "/popup",
         template: Template,
         controller: Controller,
         controllerAs: 'vm'
